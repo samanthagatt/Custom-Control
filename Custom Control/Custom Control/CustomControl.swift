@@ -21,7 +21,7 @@ class CustomControl: UIControl {
     var value: Int = 1
     
     private let componentDimension: CGFloat = 40.0
-    private let componentCount = 5
+    private let componentCount = 6
     private let componentActiveColor = UIColor.black
     private let componentInactiveColor = UIColor.gray
     private let componentPadding: CGFloat = 8.0
@@ -35,13 +35,14 @@ class CustomControl: UIControl {
         
         
         var x: CGFloat = 0.0
-        for int in 1...5 {
+        for int in 1...componentCount {
             let label = UILabel(frame: CGRect(x: x, y: 0, width: componentDimension, height: componentDimension))
-            label.tag = int
+            // label.tag = int
+            label.tag = componentCount - int + 1
             label.font = UIFont.boldSystemFont(ofSize: 32.0)
             label.text = "✯"
             label.textAlignment = .center
-            if int == 1 {
+            if label.tag == 1 {
                 label.textColor = componentActiveColor
             } else {
                 label.textColor = componentInactiveColor
@@ -69,6 +70,7 @@ class CustomControl: UIControl {
                 }
                 
                 if value != oldValue {
+                    label.performFlare()
                     sendActions(for: [.valueChanged])
                 }
             }
