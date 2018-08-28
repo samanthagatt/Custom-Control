@@ -60,7 +60,13 @@ class CustomControl: UIControl {
                 let oldValue = value
                 value = label.tag
                 
-                label.textColor = componentActiveColor
+                for label in labelArray {
+                    if label.tag <= value {
+                        label.textColor = componentActiveColor
+                    } else {
+                        label.textColor = componentInactiveColor
+                    }
+                }
                 
                 if value != oldValue {
                     sendActions(for: [.valueChanged])
