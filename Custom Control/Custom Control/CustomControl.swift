@@ -10,7 +10,6 @@ import UIKit
 
 class CustomControl: UIControl {
     
-    // XCode suggested required (not mentioned in instructions)
     required init?(coder aCoder: NSCoder) {
         super.init(coder: aCoder)
         
@@ -27,12 +26,14 @@ class CustomControl: UIControl {
     private let componentInactiveColor = UIColor.gray
     private let componentPadding: CGFloat = 8.0
     
+    private var labelArray: [UILabel] = []
+    
     
     // MARK: - Private functions
     
     private func setup() {
         
-        var labelArray: [UILabel] = []
+        
         var x: CGFloat = 0.0
         for int in 1...5 {
             let label = UILabel(frame: CGRect(x: x, y: 0, width: componentDimension, height: componentDimension))
@@ -50,12 +51,22 @@ class CustomControl: UIControl {
             labelArray.append(label)
             x += componentDimension + componentPadding
         }
-        
-        print(labelArray.count)
     }
     
     private func updateValue(at touch: UITouch) {
-        
+        for label in labelArray {
+            let touchPoint = touch.location(in: label)
+            if bounds.contains(touchPoint) {
+                let oldValue = value
+                value = label.tag
+                
+                label.textColor = componentActiveColor
+                
+                if value != oldValue {
+                    sendActions(for: [.valueChanged])
+                }
+            }
+        }
     }
     
     
@@ -73,7 +84,7 @@ class CustomControl: UIControl {
     
     override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
         updateValue(at: touch)
-        sendActions(for: [.touchDown, .valueChanged])
+        sendActions(for: [.touchDown])
         return true
     }
     
@@ -81,7 +92,7 @@ class CustomControl: UIControl {
         let touchPoint = touch.location(in: self)
         if bounds.contains(touchPoint) {
             updateValue(at: touch)
-            sendActions(for: [.touchDragInside, .valueChanged])
+            sendActions(for: [.touchDragInside])
         } else {
             sendActions(for: [.touchDragOutside])
         }
@@ -96,7 +107,7 @@ class CustomControl: UIControl {
         let touchPoint = touch.location(in: self)
         if bounds.contains(touchPoint) {
             updateValue(at: touch)
-            sendActions(for: [.touchUpInside, .valueChanged])
+            sendActions(for: [.touchUpInside])
         } else {
             sendActions(for: [.touchUpOutside])
         }
